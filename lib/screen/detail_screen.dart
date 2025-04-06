@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:sayohat/Place.dart';
 
 class DetailScreen extends StatefulWidget {
   final Place data;
+  final String hero;
 
-  const DetailScreen({super.key, required this.data});
+  const DetailScreen({super.key, required this.data,required this.hero});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -19,9 +20,14 @@ class _DetailScreenState extends State<DetailScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            leading: Icon(
-              Icons.arrow_back_ios_new,
-              color: Colors.white,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
             expandedHeight: 250.0,
             floating: false,
@@ -41,7 +47,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 fit: StackFit.expand,
                 children: [
                   Hero(
-                    tag: widget.data.imageUrl,
+                    tag: widget.hero,
                     child: Image.network(
                       widget.data.imageUrl,
                       fit: BoxFit.cover,
@@ -80,52 +86,44 @@ class _DetailScreenState extends State<DetailScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        height: 40,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Color(0xFF5EDFFF),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.map_outlined, color: Color(0xFF5EDFFF)),
-                            SizedBox(width: 10),
-                            Text(
-                              "Joylashuv",
-                              style: TextStyle(color: Color(0xFF5EDFFF)),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () async {
+                          MapsLauncher.launchCoordinates(
+                              widget.data.lat, widget.data.long);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Container(
+                            height: 40,
+                            width: 200,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(0xFF5EDFFF),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Color(0xFF5EDFFF),
-                            width: 2,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.map_outlined,
+                                    color: Color(0xFF5EDFFF)),
+                                Text(
+                                  "Joylashuv",
+                                  style: TextStyle(color: Color(0xFF5EDFFF)),
+                                ),
+                              ],
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset("assets/image/ic_world.svg"),
-                            SizedBox(width: 10),
-                            Text("Manba",
-                                style: TextStyle(
-                                  color: Color(0xFF5EDFFF),
-                                )),
-                          ],
                         ),
                       ),
+                      Spacer()
                     ],
                   ),
+                  SizedBox(
+                    height: 30,
+                  )
                 ],
               ),
             ),

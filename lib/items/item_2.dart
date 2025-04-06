@@ -74,7 +74,7 @@ class Item2 extends StatelessWidget {
                       ),
                       Spacer(),
                       Text(
-                        "4.7",
+                        "5",
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 20,

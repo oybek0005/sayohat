@@ -17,7 +17,16 @@ final PlacesRepository placesRepository = PlacesRepository();
 
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
-  final List<String> categories = ["Barchasi", "Tog'", "Dacha", "Shahar"];
+  final List<String> categories = [
+    "All",
+    "Buxoro",
+    "Surxondaryo",
+    "Xorazm",
+    "Samarqand",
+    "Qashqadaryo",
+    "Jizzax",
+    "Toshkent"
+  ];
   int categoryIndex = 0;
 
   List<Place> allPlaces = placesRepository.getPlaces();
@@ -42,27 +51,44 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  void _filterByIndex(int index){
-      setState(() {
-        categoryIndex = index;
-        print("$index  index");
+  void _filterByIndex(int index) {
+    setState(() {
+      categoryIndex = index;
+      print("$index  index");
       switch (index) {
         case 1:
-          filteredPlaces = allPlaces.where((place) => place.id == "Tog'").toList();
+          filteredPlaces =
+              allPlaces.where((place) => place.id == "Buxoro").toList();
           break;
         case 2:
-          filteredPlaces = allPlaces.where((place) => place.id == "Dacha").toList();
+          filteredPlaces =
+              allPlaces.where((place) => place.id == "Surxondaryo").toList();
           break;
         case 3:
-          filteredPlaces = allPlaces.where((place) => place.id == "Shahar").toList();
+          filteredPlaces =
+              allPlaces.where((place) => place.id == "Xorazm").toList();
+          break;
+        case 4:
+          filteredPlaces =
+              allPlaces.where((place) => place.id == "Samarqand").toList();
+          break;
+        case 5:
+          filteredPlaces =
+              allPlaces.where((place) => place.id == "Qashqadaryo").toList();
+          break;
+        case 6:
+          filteredPlaces =
+              allPlaces.where((place) => place.id == "Jizzax").toList();
+          break;
+        case 7:
+          filteredPlaces =
+              allPlaces.where((place) => place.id == "Toshkent").toList();
           break;
         default:
           filteredPlaces = List.from(allPlaces);
       }
-      });
+    });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -109,40 +135,47 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(categories.length, (index) {
-              categoryIndex = index;
-              bool isSelected = selectedIndex == index;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-                  _filterByIndex(selectedIndex);
-                },
-                child: Container(
-                  height: 40,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    color: isSelected ? Color(0xFF5EDFFF) : Color(0xFF263238),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text(
-                      categories[index],
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        color: isSelected ? Colors.black : Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(categories.length, (index) {
+                bool isSelected = selectedIndex == index;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = index;
+                      });
+                      _filterByIndex(selectedIndex);
+                    },
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color:
+                            isSelected ? Color(0xFF5EDFFF) : Color(0xFF263238),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      textAlign: TextAlign.center,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text(
+                            categories[index],
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: isSelected ? Colors.black : Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+            ),
           ),
           const SizedBox(height: 16),
           Flexible(
@@ -177,16 +210,18 @@ class _MainScreenState extends State<MainScreen> {
                             FocusManager.instance.primaryFocus?.unfocus();
                             Navigator.push(
                               context,
-                                PageRouteBuilder(
-                                  transitionDuration: Duration(milliseconds: 500),
-                                  reverseTransitionDuration: Duration(milliseconds: 150),
-                                  pageBuilder: (context, animation, secondaryAnimation) =>
-                                      DetailScreen(data: allPlaces[index]),
-                                ),
-                              );
+                              PageRouteBuilder(
+                                transitionDuration: Duration(milliseconds: 500),
+                                reverseTransitionDuration:
+                                    Duration(milliseconds: 150),
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        DetailScreen(data: allPlaces[index],hero:"${allPlaces[index].imageUrl}top"),
+                              ),
+                            );
                           },
                           child: Hero(
-                            tag: allPlaces[index].imageUrl,
+                            tag: "${allPlaces[index].imageUrl}top",
                             child: ManzaraCard(
                               imageUrl: allPlaces[index].imageUrl,
                               title: allPlaces[index].title,
@@ -195,7 +230,6 @@ class _MainScreenState extends State<MainScreen> {
                           ),
                         );
                       },
-
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(width: 8);
                       },
@@ -232,15 +266,19 @@ class _MainScreenState extends State<MainScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  DetailScreen(data: filteredPlaces[index]),
+                                  DetailScreen(data: filteredPlaces[index],hero:"${allPlaces[index].imageUrl}bottom"),
                             ),
                           );
                         },
-                        child: Item2(
-                          imageUrl: filteredPlaces[index].imageUrl,
-                          title: filteredPlaces[index].title,
-                          location: filteredPlaces[index].location,
+                        child: Hero(
+                          tag: "${allPlaces[index].imageUrl}bottom",
+                          child: Item2(
+                            imageUrl: filteredPlaces[index].imageUrl,
+                            title: filteredPlaces[index].title,
+                            location: filteredPlaces[index].location,
+                          ),
                         ),
+
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) {
@@ -252,6 +290,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
+          SizedBox(height: 20,)
         ],
       ),
     );
